@@ -14,12 +14,16 @@ let io = socketIO(server);
 app.use(express.static(publicPath));
 
 
-io.on('connection', (socket)=>{
+io.on('connection', function(socket){
     console.log('new user connected');
-    
-    socket.on('disconnect', ()=>{
-        console.log('User was disconnected');
-        
+
+    socket.on('createmessage', function(message){
+        console.log('new', message);
+        io.emit('newMessage', {from:message.from, text:message.text});
+    })
+
+    socket.on('disconnect', function(){
+        console.log('User was disconnected');  
     });
 });
 
@@ -28,4 +32,4 @@ server.listen(process.env.PORT||4500, ()=>{
     
 })
 console.log(publicPath);
-
+console.log('https://chat-app9605.herokuapp.com/')
